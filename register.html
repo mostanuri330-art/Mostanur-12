@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<main class="auth-page">
+
+    <div class="auth-card">
+
+        <a href="index.html" class="auth-logo">YourName</a>
+
+        <h1>Create your account</h1>
+        <p class="auth-subtitle">
+            Join us and create your personal profile.
+        </p>
+
+        <form id="registerForm">
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="you@example.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Minimum 6 characters"
+                    minlength="6"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Repeat your password"
+                    required
+                >
+            </div>
+
+            <label class="checkbox-row">
+                <input type="checkbox" id="terms" required>
+                <span>I agree to the terms and conditions</span>
+            </label>
+
+            <button type="submit" class="button button-dark auth-button">
+                Create Account
+            </button>
+
+            <p id="registerMessage" class="form-message"></p>
+
+        </form>
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+
+    </div>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("registerMessage");
+
+    form.addEventListener("submit", (event) => {
+
+        event.preventDefault();
+
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        message.textContent = "";
+        message.className = "form-message";
+
+        // Check password length
+        if (password.length < 6) {
+            message.textContent =
+                "Password must contain at least 6 characters.";
+            message.classList.add("error");
+            return;
+        }
+
+        // Check passwords
+        if (password !== confirmPassword) {
+            message.textContent =
+                "Passwords do not match.";
+            message.classList.add("error");
+            return;
+        }
+
+        // Check existing account
+        const existingUser =
+            JSON.parse(localStorage.getItem("registeredUser"));
+
+        if (existingUser && existingUser.email === email) {
+            message.textContent =
+                "An account with this email already exists.";
+            message.classList.add("error");
+            return;
+        }
+
+        // Save account
+        const user = {
+            name: name,
+            email: email,
+            password: password
+        };
+
+        localStorage.setItem(
+            "registeredUser",
+            JSON.stringify(user)
+        );
+
+        message.textContent =
+            "Account created successfully! Redirecting...";
+
+        message.classList.add("success");
+
+        // Go to login
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1200);
+    });
+
+});
+</script>
+
+</body>
+</html>
